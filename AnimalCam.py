@@ -117,7 +117,7 @@ while True:
   # SEND EMAIL
   elif state == send_email: #States['send_email']:
     time.sleep(1)
-    Mailer.SendEmail(Filer.theFile)
+    Mailer.SendEmail(Filer.File)
     state = idle #States['idle']
 
   time.sleep(0.5)
