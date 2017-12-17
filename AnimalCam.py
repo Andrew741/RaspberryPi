@@ -84,8 +84,8 @@ testCount = 0
 while True:
   localTime = time.time()
   testCount = testCount + 1
-  if testCount%5 == 0:
-    motionDetected = not motionDetected
+  #if testCount%5 == 0:
+    #motionDetected = not motionDetected
   # IDLE STATE
   if state == idle: #States['idle']:
     if motionDetected:
@@ -99,7 +99,7 @@ while True:
   
   # CAPTURING
   elif state == capture: #States['capture']:
-    print('continue to capture if ', localTime, ' <= ', str(lastMotionTime+ 10),' lmt = ', lastMotionTime) 
+    print('continue to capture if ', localTime, ' <= ', str(lastMotionTime+ 10),' lmt = ', lastMotionTime)
     if localTime > (lastMotionTime + 10):
       state = stop_capture #States['stop_capture']
 
