@@ -7,6 +7,8 @@ import os
 from datetime import datetime
 from os.path import basename
 import emailer
+import Cvt2Mp4
+
 
 
 TempFileName = '.\Temp.h264'
@@ -52,25 +54,12 @@ def motion_callback( channel ):
 
 GPIO.add_event_detect(24, GPIO.BOTH, callback=motion_callback)
 
-'''
-  This class should handle all of the file IO
-  '''
-class FileHelper:
-  
-  def __init__(self, theFile):
-    self.File = theFile
-    print('file helper up and running')
-  
-  def cvt2mp4(self):
-    self.File  = time.strftime("%m%d_%H%M%S") + ".mp4"
-    call("MP4Box -add " + TempFileName + self.File , shell = True)
-
-
 
 #main body
 pci = PiCamInterface()
-Filer = FileHelper("./test.py")
+Filer = Cvt2Mp4.FileHelper()
 Mailer = emailer.Emailer()
+Filer = Cvt2Mp4.FileHelper()
 
 #state machine variables
 '''States = {

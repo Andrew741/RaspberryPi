@@ -17,6 +17,7 @@ class FileHelper:
   
   def cvt2mp4(self):
     with open(time.strftime("%Y%m%d_%H%M%S") + ".mp4", 'w') as outFile:
+      print(outFile.name)
       call("MP4Box -add " + "./temp.h264" + outFile.name , shell = True)
 
 
