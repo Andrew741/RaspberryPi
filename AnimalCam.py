@@ -11,7 +11,7 @@ import Cvt2Mp4
 
 
 
-TempFileName = '.\temp.h264'
+TempFileName = './temp.h264'
 
 GPIO.setwarnings (False)
 GPIO.setmode (GPIO.BCM)
