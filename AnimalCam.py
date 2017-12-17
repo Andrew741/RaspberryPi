@@ -78,10 +78,13 @@ send_email = 4
 
 state = idle #States['idle']
 
+testCount = 0
 
 while True:
   localTime = time.time()
-  
+  testCount = testCount + 1
+  if testCount%5 == 0:
+    motionDetected = not motionDetected
   # IDLE STATE
   if state == idle: #States['idle']:
     if motionDetected:
