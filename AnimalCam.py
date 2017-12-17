@@ -108,9 +108,9 @@ while True:
   
   # SEND EMAIL
   elif state == send_email: #States['send_email']:
-    Filer.cvt2mp4()
+    theMp4 = Filer.cvt2mp4()
     time.sleep(1)
-    Mailer.SendEmail(Filer.File)
+    Mailer.SendEmail(theMp4)
     state = idle #States['idle']
 
   time.sleep(0.5)
