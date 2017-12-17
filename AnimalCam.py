@@ -102,7 +102,7 @@ while True:
   # CAPTURE START
   elif state == start_capture: #States['start_capture']:
     pci.start_recording()
-      state = capture #States['capture']
+    state = capture #States['capture']
   
   # CAPTURING
   elif state == capture: #States['capture']:
@@ -112,7 +112,7 @@ while True:
 # CAPTURE STOP
   elif state == stop_capture: #States['stop_capture']:
     pci.stop_recording()
-      state = send_email #States['send_email']
+    state = send_email #States['send_email']
   
   # SEND EMAIL
   elif state == send_email: #States['send_email']:
