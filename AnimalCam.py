@@ -11,7 +11,7 @@ import Cvt2Mp4
 
 
 
-TempFileName = '.\Temp.h264'
+TempFileName = '.\temp.h264'
 
 GPIO.setwarnings (False)
 GPIO.setmode (GPIO.BCM)
@@ -28,12 +28,12 @@ class PiCamInterface:
     self.cam = picamera.PiCamera()
   
   def start_recording(self):
-    #self.cam.start_recording(TempFileName)
-    print('starting preview')
-    self.cam.start_preview()
+    self.cam.start_recording(TempFileName)
+    #print('starting preview')
+    #self.cam.start_preview()
   def stop_recording(self):
-    self.cam.stop_preview()
-#self.cam.stop_recording()
+    #self.cam.stop_preview()
+    self.cam.stop_recording()
 
 
 
