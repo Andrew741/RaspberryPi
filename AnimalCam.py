@@ -50,7 +50,8 @@ def motion_callback( channel ):
   else:
     lastMotionTime = time.time()
     motionDetected = True
-    print ('motion started')
+    print ('motion started at ', lastMotionTime)
+
 
 GPIO.add_event_detect(24, GPIO.BOTH, callback=motion_callback)
 
@@ -98,6 +99,7 @@ while True:
   
   # CAPTURING
   elif state == capture: #States['capture']:
+    print('continue to capture if ', localTime, ' <= ', str(lastMotionTime+ 10),' lmt = ', lastMotionTime) 
     if localTime > (lastMotionTime + 10):
       state = stop_capture #States['stop_capture']
 
