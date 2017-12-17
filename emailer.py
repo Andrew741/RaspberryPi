@@ -9,16 +9,17 @@ import smtplib
 '''
 class Emailer:
   
-  def __init__(self, bodyMsg = ''):
+  def __init__(self, subject ='', bodyMsg = ''):
     self.msg = MIMEMultipart()
     
-    with (r'~/Config/Email.txt', 'r') as configFile:
+    with open(r'./Config/Email.txt', 'r') as configFile:
       Configuration = configFile.readlines()
-      [self.fromAdd,self.fromPwd] = Configuration[1]
-      self.toAdd = Configuration[2]
+      print(Configuration)
+      [self.fromAdd,self.fromPwd] = Configuration[1].split()
+      self.toAdd = Configuration[2].strip()
       self.msg['FROM']     = self.fromAdd
       self.msg['TO']       = self.toAdd
-    self.msg['SUBJECT']  = "Motion Detected"
+    self.msg['SUBJECT']  = subject
     body = bodyMsg
     self.msg.attach(MIMEText(body,'plain'))
     print('Emailer setup')
