@@ -98,7 +98,7 @@ while True:
   
   # CAPTURING
   elif state == capture: #States['capture']:
-    if localTime > (lastMotionTime + 5):
+    if localTime > (lastMotionTime + 10):
       state = stop_capture #States['stop_capture']
 
 # CAPTURE STOP
