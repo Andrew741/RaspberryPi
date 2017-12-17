@@ -99,10 +99,10 @@ while True:
       print("Motion Detected")
       state = start_capture #States['start_capture']
 
-# CAPTURE START
-elif state == start_capture: #States['start_capture']:
-  pci.start_recording()
-    state = capture #States['capture']
+  # CAPTURE START
+  elif state == start_capture: #States['start_capture']:
+    pci.start_recording()
+      state = capture #States['capture']
   
   # CAPTURING
   elif state == capture: #States['capture']:
@@ -110,9 +110,9 @@ elif state == start_capture: #States['start_capture']:
       state = stop_capture #States['stop_capture']
 
 # CAPTURE STOP
-elif state == stop_capture: #States['stop_capture']:
-  pci.stop_recording()
-    state = send_email #States['send_email']
+  elif state == stop_capture: #States['stop_capture']:
+    pci.stop_recording()
+      state = send_email #States['send_email']
   
   # SEND EMAIL
   elif state == send_email: #States['send_email']:
@@ -120,7 +120,7 @@ elif state == stop_capture: #States['stop_capture']:
     Mailer.SendEmail(Filer.theFile)
     state = idle #States['idle']
 
-time.sleep(0.5)
+  time.sleep(0.5)
   print(state)
 
 
