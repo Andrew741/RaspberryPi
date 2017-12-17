@@ -14,7 +14,7 @@ class Emailer:
     
     with open(r'./Config/Email.txt', 'r') as configFile:
       Configuration = configFile.readlines()
-      print(Configuration)
+      #print(Configuration)
       [self.fromAdd,self.fromPwd] = Configuration[1].split()
       self.toAdd = Configuration[2].strip()
       self.msg['FROM']     = self.fromAdd
