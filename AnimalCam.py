@@ -11,53 +11,57 @@ import Cvt2Mp4
 
 
 
-TempFileName = './temp.h264'
+'''
+  Variables visible to the whole file.
+'''
+lastMotionTime = 0      # timestamp of the last time motion was detected
+motionDetected = False  # Boolean to keep track of state
+
+# Broadcom pin IDs
+MOTION_PIN    = 24
+LED_POWER_PIN = 23
+TempFileName = './temp.h264' # always save to this file
 
 GPIO.setwarnings (False)
 GPIO.setmode (GPIO.BCM)
 
-#pin 24 = motion sensor
-GPIO.setup (24, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+#           PIN NUMBER      IN/OUT    Pull up or pull down resistor
+GPIO.setup (MOTION_PIN,     GPIO.IN,  pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup (LED_POWER_PIN,  GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
+
+
 
 '''
-  This class abstracts some of the Camera functions to an interface
-  '''
-class PiCamInterface:
-  def __init__(self):
-    print('setting up the camera')
-    self.cam = picamera.PiCamera()
-  
-  def start_recording(self):
-    self.cam.start_recording(TempFileName)
-    #print('starting preview')
-    #self.cam.start_preview()
-  def stop_recording(self):
-    #self.cam.stop_preview()
-    self.cam.stop_recording()
+This function gets called when either a rising edge or falling edge of the signal on the motion detector pin occurs.
 
+The motion detector puts out 3.3V onto the motion detector pin whenever there is motion detected.
 
+3.3V            -------------
+               |             |
+0.0V ----------              --------------
+(no motion)      (motion)
 
-lastMotionTime = 0
-
-motionDetected = False
+It keeps track of the motion with the motionDetected variable, and switches it accordingly. It also saves off the system time of the last time that we got motion.
+'''
 
 def motion_callback( channel ):
+  # Not great to use globals, but since this is an interrupt it's the only option.
+  # In general, the only thing that interrupts should do is change a couple variables and then return. Don't call any functions or do  a ton of stuff in there or you can miss other important events.
   global motionDetected
   global lastMotionTime
+  
   if motionDetected:
     motionDetected = False
-    print ('motion stopped')
   else:
     lastMotionTime = time.time()
     motionDetected = True
-    print ('motion started at ', lastMotionTime)
 
 
-GPIO.add_event_detect(24, GPIO.BOTH, callback=motion_callback)
+GPIO.add_event_detect(MOTION_PIN, GPIO.BOTH, callback=motion_callback)
 
 
 #main body
-pci = PiCamInterface()
+PiCam = picamera.PiCamera()
 Filer = Cvt2Mp4.FileHelper()
 Mailer = emailer.Emailer()
 Filer = Cvt2Mp4.FileHelper()
@@ -71,21 +75,29 @@ Filer = Cvt2Mp4.FileHelper()
   'send_email'	  : 4
   }
   '''
-idle = 0
+idle          = 0
 start_capture = 1
-capture = 2
-stop_capture = 3
-send_email = 4
+capture       = 2
+stop_capture  = 3
+send_email    = 4
 
 state = idle #States['idle']
 
-testCount = 0
+TodoList = list()
+
+TodoList.append(' Test the LED: Solution is to assemble')
+TodoList.append(' Save off mp4s and .h264s to usb stick: Solution is to keep this script on the drive')
+TodoList.append(' Live stream the view camera view')
+TodoList.append(' Setup an ad hoc network to run this from: Warning, this will negate the email notifications (which is okay)')
+TodoList.append(' Set up a cron job to email a summary once a day, with a number of videos recorded. Maybe have the cronjob do the count of mp4 files and send email')
+
+for item in TodoList:
+  print(item)
+
 
 while True:
   localTime = time.time()
-  testCount = testCount + 1
-  #if testCount%5 == 0:
-    #motionDetected = not motionDetected
+
   # IDLE STATE
   if state == idle: #States['idle']:
     if motionDetected:
@@ -94,25 +106,27 @@ while True:
 
   # CAPTURE START
   elif state == start_capture: #States['start_capture']:
-    pci.start_recording()
+    # turn on the LED so we can see
+    GPIO.output(LED_POWER_PIN, GPIO.HIGH)
+    PiCam.start_recording(TempFileName)
     state = capture #States['capture']
   
   # CAPTURING
   elif state == capture: #States['capture']:
-    print('continue to capture if ', localTime, ' <= ', str(lastMotionTime+ 10),' lmt = ', lastMotionTime)
     if localTime > (lastMotionTime + 10):
       state = stop_capture #States['stop_capture']
 
-# CAPTURE STOP
+  # CAPTURE STOP
   elif state == stop_capture: #States['stop_capture']:
-    pci.stop_recording()
+    PiCam.stop_recording()
+    GPIO.output(LED_POWER_PIN, GPIO.LOW)
     state = send_email #States['send_email']
   
   # SEND EMAIL
   elif state == send_email: #States['send_email']:
     theMp4 = Filer.cvt2mp4()
-    time.sleep(1)
-    Mailer.SendEmail(theMp4)
+    if not theMp4 == 'Error':
+      Mailer.SendEmail(theMp4)
     state = idle #States['idle']
 
   time.sleep(0.5)
