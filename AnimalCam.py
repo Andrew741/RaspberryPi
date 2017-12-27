@@ -27,7 +27,7 @@ GPIO.setmode (GPIO.BCM)
 
 #           PIN NUMBER      IN/OUT    Pull up or pull down resistor
 GPIO.setup (MOTION_PIN,     GPIO.IN,  pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup (LED_POWER_PIN,  GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup (LED_POWER_PIN,  GPIO.OUT)
 
 
 

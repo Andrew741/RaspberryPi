@@ -24,7 +24,7 @@ class Emailer:
         body = bodyMsg
         self.msg.attach(MIMEText(body,'plain'))
   
-    Except:
+    except:
         self.setup = 'Incomplete'
     print(self.setup)
   
@@ -48,6 +48,6 @@ class Emailer:
         server.quit()
         self.setup = 'Succesful'
       
-      Except:
+      except:
         print('Hit an exception sending the email')
       print(self.setup)

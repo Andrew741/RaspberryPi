@@ -22,7 +22,7 @@ class FileHelper:
         MP4Box_Call_String = "MP4Box -add " + "./temp.h264 " + outFile.name
         call(MP4Box_Call_String, shell = True)
         return outFile.name
-    Except:
+    except:
       print('Hit an exception converting to MP4')
       return 'Error'
 
